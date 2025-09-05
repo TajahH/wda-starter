@@ -39,6 +39,8 @@ export default class MovieHelper {
 
     async saveToWatchList(movies, isSaved) {
         let savedlist = []
+        // isSaved = signal (adds a class to each called "saved"?)
+        // movies = data.
         for (let movie of movies){
             if(isSaved){
                 savedlist.push(movie)
