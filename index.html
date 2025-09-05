@@ -4,28 +4,24 @@
     <title>Showing Movie Data from an API</title>
     <link rel="stylesheet" href="./css/style.css" />
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script type="module" src="./js/scripts.js"></script>
+    <script src="./js/scripts.js"></script>
 </head>
 <body>
     <h1>Movie Data</h1>
-    <div class="movie-container">
-        <div x-data="{
-            movies: [],
-            error: null,
-            loading: false,
-            saveMovies: []
-            async loadMovieData() {
-                this.movies = await loadMovies()
-            },
-            const saved = localStorage.getItem('movies');
-                   if(saved) {
-                    this.movies = JSON.parse(saved)
-                   }
-        }">
-        <button @click="loadMovieData()">Load Movies</button>
-        <template x-for="movie in movies" :key="movie"
-            <span x-text="movie"></span>
+    <div x-data="movieListComponent" x-init="init()">
+        <select x-model="filter_year">
+            <option value="">All Years</option>
+            <option value="2023">2023</option>
+            <option value="2024">2024</option>
+        </select>
+        <div x-show="filter_year !== ''">
+          Showing movies from <span x-text="filter_year"></span>
         </div>
+        <ul>
+          <template x-for="movie in movies">
+            <li x-text="movie" :key="movie"></li>
+          </template>
+        </ul>
     </div>
 </body>
 </html>

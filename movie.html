@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Showing Movie Data from an API</title>
+    <link rel="stylesheet" href="./css/style.css" />
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="./js/scripts.js"></script>
+</head>
+<body>
+    <h1>Specific Movie</h1>
+    <div x-data="movieComponent" x-init="init()">
+        Movie ID from URL: <span x-text="movie"></span>
+    </div>
+</body>
+</html>
