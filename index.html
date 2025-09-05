@@ -8,15 +8,24 @@
 </head>
 <body>
     <h1>Movie Data</h1>
-    <div x-data="{
-        movies: [],
-        error: null,
-        loading: false,
-        async loadMovieData() {
-            // this.movies = ...
-        }
-    }">
-        <!-- ... -->
+    <div class="movie-container">
+        <div x-data="{
+            movies: [],
+            error: null,
+            loading: false,
+            saveMovies: []
+            async loadMovieData() {
+                this.movies = await loadMovies()
+            },
+            const saved = localStorage.getItem('movies');
+                   if(saved) {
+                    this.movies = JSON.parse(saved)
+                   }
+        }">
+        <button @click="loadMovieData()">Load Movies</button>
+        <template x-for="movie in movies" :key="movie"
+            <span x-text="movie"></span>
+        </div>
     </div>
 </body>
 </html>

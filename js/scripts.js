@@ -10,3 +10,6 @@ window.loadMovies = async () => {
     // Get movies from API, using await because getMovies is an async function
     return await Movies.getMovies();
 }
+
+loadMovies();
+
