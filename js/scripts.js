@@ -2,11 +2,11 @@ let MovieHelper;
 
 // Function to load the MovieHelper module
 async function loadMovieHelper() {
-    if (!MovieHelper) {
-        const module = await import('./MovieHelper.js')
-        MovieHelper = module.default
-    }
-    return MovieHelper
+  if (!MovieHelper) {
+    const module = await import('./MovieHelper.js')
+    MovieHelper = module.default
+  }
+  return MovieHelper
 }
 
 // Helper function to get parameter from URL
@@ -15,24 +15,42 @@ function getUrlParam(param) {
   return urlParams.get(param)
 }
 
-let movieListComponent = {
-  movies: [],
-  filter_year: '',
-  error: null,
-  init() {
-    this.loadMovies()
-  },
-  async loadMovies() {
+window.movieListComponent = function () {
+  return {
+    movies: [],
+    filter_year: '',
+    searchText: '',
+    appliedQuery: '',
+    error: null,
 
-    // Load MovieHelper class
-    const MovieHelper = await loadMovieHelper()
+    init() { this.loadMovies(); },
 
-    // Get movies from API, using await because getMovies is an async function
-    // If filter_year is set, change what movies we load from the API
-    // You could do this by calling a different method, or passing arguments into getMovies()
-    this.movies = await MovieHelper.getMovies()
-  }
-}
+    async loadMovies() {
+      const MovieHelperClass = await loadMovieHelper();
+      const api = new MovieHelperClass();
+      this.movies = await api.getMovies({ year: this.filter_year || undefined });
+    },
+
+    doSearch() {
+      this.appliedQuery = (this.searchText || '').trim().toLowerCase();
+    },
+
+    clearSearch() {
+      this.searchText = '';
+      this.appliedQuery = '';
+    },
+
+    get filteredMovies() {
+      const q = this.appliedQuery;
+      const y = (this.filter_year || '').trim();
+      return this.movies.filter(m => {
+        const matchesQuery = q ? (m.title || '').toLowerCase().includes(q) : true;
+        const matchesYear  = y ? (m.release_date || '').slice(0,4) === y : true;
+        return matchesQuery && matchesYear;
+      });
+    }
+  };
+};
 
 let movieComponent = {
   movie: null,
@@ -51,3 +69,5 @@ let movieComponent = {
     this.movie = movie_id
   }
 }
+
+window.movieComponent = movieComponent;

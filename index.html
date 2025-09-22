@@ -1,27 +1,35 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>Showing Movie Data from an API</title>
-    <link rel="stylesheet" href="./css/style.css" />
-    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script src="./js/scripts.js"></script>
+  <title>Showing Movie Data from an API</title>
+  <link rel="stylesheet" href="./css/style.css" />
+  <script defer src="./js/scripts.js"></script>
+  <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
+
 <body>
-    <h1>Movie Data</h1>
-    <div x-data="movieListComponent" x-init="init()">
-        <select x-model="filter_year">
-            <option value="">All Years</option>
-            <option value="2023">2023</option>
-            <option value="2024">2024</option>
-        </select>
-        <div x-show="filter_year !== ''">
-          Showing movies from <span x-text="filter_year"></span>
-        </div>
-        <ul>
-          <template x-for="movie in movies">
-            <li x-text="movie" :key="movie"></li>
-          </template>
-        </ul>
+  <h1>Movie Data</h1>
+  <div x-data="movieListComponent()" x-init="init()">
+    <select x-model="filter_year">
+      <option value="">All Years</option>
+      <option value="2023">2023</option>
+      <option value="2024">2024</option>
+    </select>
+    <div x-show="filter_year !== ''">
+      Showing movies from <span x-text="filter_year"></span>
     </div>
+    <form @submit.prevent="doSearch()" style="margin: 0 0 1rem 0;">
+      <input type="search" placeholder="Search movies..." x-model="searchText" aria-label="Search movies by keyword">
+      <button type="submit">Search</button>
+      <button type="button" @click="clearSearch()">Clear</button>
+    </form>
+    <ul>
+      <template x-for="movie in filteredMovies" :key="movie.id">
+        <li x-text="movie.title"></li>
+      </template>
+    </ul>
+  </div>
 </body>
+
 </html>
