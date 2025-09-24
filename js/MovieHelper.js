@@ -31,5 +31,32 @@ export default class MovieHelper {
         }
     }
 
+    async getMovieDetails(id) {
+        const url = new URL(`${this.api_root}/movie/${id}`);
+        url.searchParams.set('api_key', this.api_key);
+        url.searchParams.set('language', 'en-GB');
+        url.searchParams.set('append_to_response', 'credits');
+        console.log('getMovieDetails URL:', url.toString());
+
+        const res = await fetch(url.toString());
+        if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+        return res.json();
+    }
+
+    async searchMovies(query, { year } = {}) {
+        const url = new URL(`${this.api_root}/search/movie`);
+        url.searchParams.set('api_key', this.api_key);
+        url.searchParams.set('include_adult', 'false');
+        url.searchParams.set('language', 'en-GB');
+        url.searchParams.set('query', query);
+        if (year) url.searchParams.set('primary_release_year', String(year));
+
+        const res = await fetch(url.toString());
+        if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+        const data = await res.json();
+        return Array.isArray(data.results) ? data.results : [];
+    }
+
+
 }
 

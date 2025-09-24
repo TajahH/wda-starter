@@ -9,6 +9,7 @@
 </head>
 
 <body>
+  <div x-data="movieComponent" x-init="init()"></div>
   <h1>Movie Data</h1>
   <div x-data="movieListComponent()" x-init="init()">
     <select x-model="filter_year">
@@ -23,11 +24,18 @@
       <input type="search" placeholder="Search movies..." x-model="searchText" aria-label="Search movies by keyword">
       <button type="submit">Search</button>
       <button type="button" @click="clearSearch()">Clear</button>
+      <div>
+        Watchlist: <span x-text="watchlistCount"></span>
+      </div>
     </form>
     <ul>
-      <template x-for="movie in filteredMovies" :key="movie.id">
-        <li x-text="movie.title"></li>
-      </template>
+        <template x-for="movie in filteredMovies" :key="movie.id">
+          <li>
+            <a :href="`movie.html?movie_id=${movie.id}`" x-text="movie.title"></a>
+            <button type="button" @click="toggleWatchlist(movie)" x-text="isInWatchlist(movie) ? 'Remove' : 'Add to watchlist'">
+            </button>
+          </li>
+        </template>
     </ul>
   </div>
 </body>
