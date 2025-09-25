@@ -32,11 +32,12 @@
         <template x-for="movie in filteredMovies" :key="movie.id">
           <li>
             <a :href="`movie.html?movie_id=${movie.id}`" x-text="movie.title"></a>
-            <img :src="movie && movie.poster_path ? `https://image.tmdb.org/t/p/w342${movie.poster_path}` : ''"
-              :alt="movie ? (movie.title + ' poster') : ''" />
+            <br>
             <button class="watchlist-btn" :class="isInWatchlist(movie) ? 'watchlist-btn--clear' : ''" type="button"
               @click="toggleWatchlist(movie)" x-text="isInWatchlist(movie) ? 'Remove' : 'Add to watchlist'">
             </button>
+            <img :src="movie && movie.poster_path ? `https://image.tmdb.org/t/p/w342${movie.poster_path}` : ''"
+              :alt="movie ? (movie.title + ' poster') : ''" />
           </li>
         </template>
       </ul>

@@ -17,6 +17,10 @@ h1 {
     text-align: center;
 }
 
+img {
+    padding: 20px;
+}
+
 button {
     border-radius: 100px;
     color: black;
