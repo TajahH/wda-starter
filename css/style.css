@@ -40,7 +40,15 @@ button {
     border-radius: 8px;
     width: 30em
 }
-
+.movie-page-container{
+    background-color: blanchedalmond;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    border: 2px solid darkblue;
+    border-radius: 8px;
+    width: 30em
+}
 .movie-container {
     background-color: blanchedalmond;
     padding: 10px;

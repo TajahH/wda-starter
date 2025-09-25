@@ -14,6 +14,7 @@
     <h1 x-text="movie ? movie.title : 'Loading…'"></h1>
     <div class="page-section">
       <div class="movie-page-container">
+        <p><a href="index.html">Return to movie list</a></p>
         <p x-text="movie ? (movie.overview || '') : ''"></p>
 
         <p>Year: <span x-text="movie ? (movie.release_date || '').slice(0,4) : ''"></span></p>
