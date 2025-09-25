@@ -25,7 +25,7 @@
         <button type="submit">Search</button>
         <button type="button" @click="clearSearch()">Clear</button>
         <div>
-          Watchlist: <span x-text="watchlistCount"></span>
+          <a :href="`watchlist.html`">Watchlist: <span x-text="watchlistCount"></span></a>
         </div>
       </form>
       <ul>

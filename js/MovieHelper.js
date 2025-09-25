@@ -15,18 +15,21 @@ export default class MovieHelper {
         url.searchParams.set('language', 'en-GB');
         if (year) url.searchParams.set('primary_release_year', String(year));
         try {
-            const response = await fetch(url.toString())
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            let titles = []
-            const data = await response.json()
-            return Array.isArray(data.results) ? data.results : titles // need to pass these into a div/list in the index.html
+            const response = await fetch(url.toString());
+            if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+            const data = await response.json();
+            return Array.isArray(data.results) ? data.results : [];
         } catch (err) {
             console.error("Error fetching movies:", err);
-            return titles
+            return []
         }
     }
+
+    /* TODO Filter results using the following attributes
+Runtime / duration
+Genre
+Release year - buggy
+*/
 
     async getMovieDetails(id) {
         const url = new URL(`${this.api_root}/movie/${id}`);
@@ -38,6 +41,11 @@ export default class MovieHelper {
         const res = await fetch(url.toString());
         if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
         return res.json();
+    }
+
+    async getMoviesByIds(ids = []) {
+        const results = await Promise.all(ids.map(id => this.getMovieDetails(id)));
+        return results.filter(Boolean);
     }
 
     async searchMovies(query, { year } = {}) {
@@ -52,15 +60,6 @@ export default class MovieHelper {
         if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
         const data = await res.json();
         return Array.isArray(data.results) ? data.results : [];
-    }
-
-    async getWatchList(id){
-        const storedWatchlist = localStorage.getItem("id");
-        if (storedWatchlist) {
-            const watchlistData = JSON.parse(storedWatchlist);
-        } else {
-            console.log('No stored data.')
-        }
     }
 
 }

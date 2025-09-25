@@ -1,5 +1,12 @@
 import MovieHelper from './MovieHelper.js';
 
+function getWatchlistIds() {
+  try {
+    return JSON.parse(localStorage.getItem('watchlist_ids') || '[]');
+  } catch {
+    return [];
+  }
+}
 // Helper function to get parameter from URL
 function getUrlParam(param) {
   const urlParams = new URLSearchParams(window.location.search)
@@ -20,8 +27,7 @@ window.movieListComponent = function () {
       this.loadMovies()
       // load saved ids
       try {
-        const ids = JSON.parse(localStorage.getItem('watchlist_ids') || '[]');
-        this.watchlistIds = new Set(ids);
+        this.watchlistIds = new Set(getWatchlistIds());
       } catch { }
     },
 
@@ -47,6 +53,7 @@ window.movieListComponent = function () {
     get watchlistCount() {
       return this.watchlistIds.size;
     },
+
 
     async doSearch() {
       const query = (this.searchText || '').trim();
@@ -79,6 +86,46 @@ window.movieListComponent = function () {
         const matchesYear = y ? (m.release_date || '').slice(0, 4) === y : true;
         return matchesQuery && matchesYear;
       });
+    }
+  };
+};
+
+window.watchlistComponent = function () {
+  return {
+    watchlistIds: new Set(),
+    api: null,
+    movies: [],
+    error: null,
+
+    init() {
+      const ids = getWatchlistIds();
+      this.watchlistIds = new Set(ids);
+      if (!ids.length) return;
+
+      this.api = new MovieHelper();
+      this.load(ids);
+    },
+
+    async load(ids) {
+      try {
+        this.movies = await this.api.getMoviesByIds(ids);
+      } catch (e) {
+        this.error = e.message || 'Failed to load watchlist.';
+      }
+    },
+    saveWatchlist() {
+      localStorage.setItem('watchlist_ids', JSON.stringify([...this.watchlistIds]));
+    },
+
+
+    removeFromWatchlist(id) {
+      if (!id) return;
+      const next = new Set(this.watchlistIds);
+      if (next.delete(id)) {
+        this.watchlistIds = next;                      
+        this.movies = this.movies.filter(m => m.id !== id);  
+        this.saveWatchlist();                          
+      }
     }
   };
 };
