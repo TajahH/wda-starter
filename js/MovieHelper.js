@@ -1,5 +1,3 @@
-// All of our API logic can go in here
-// We can interact with our API via this class
 export default class MovieHelper {
 
     constructor() {
@@ -16,7 +14,6 @@ export default class MovieHelper {
         url.searchParams.set('include_adult', 'false');
         url.searchParams.set('language', 'en-GB');
         if (year) url.searchParams.set('primary_release_year', String(year));
-        // Replace this with actual movie results from an API call using fetch()
         try {
             const response = await fetch(url.toString())
             if (!response.ok) {
@@ -24,10 +21,10 @@ export default class MovieHelper {
             }
             let titles = []
             const data = await response.json()
-            return Array.isArray(data.results) ? data.results : [] // need to pass these into a div/list in the index.html
+            return Array.isArray(data.results) ? data.results : titles // need to pass these into a div/list in the index.html
         } catch (err) {
             console.error("Error fetching movies:", err);
-            return []
+            return titles
         }
     }
 

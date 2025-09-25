@@ -1,13 +1,4 @@
-let MovieHelper;
-
-// Function to load the MovieHelper module
-async function loadMovieHelper() {
-  if (!MovieHelper) {
-    const module = await import('./MovieHelper.js')
-    MovieHelper = module.default
-  }
-  return MovieHelper
-}
+import MovieHelper from './MovieHelper.js';
 
 // Helper function to get parameter from URL
 function getUrlParam(param) {
@@ -25,7 +16,8 @@ window.movieListComponent = function () {
     watchlistIds: new Set(),
 
     init() {
-      this.loadMovies();
+      this.api = new MovieHelper();
+      this.loadMovies()
       // load saved ids
       try {
         const ids = JSON.parse(localStorage.getItem('watchlist_ids') || '[]');
@@ -34,9 +26,7 @@ window.movieListComponent = function () {
     },
 
     async loadMovies() {
-      const MovieHelperClass = await loadMovieHelper();
-      const api = new MovieHelperClass();
-      this.movies = await api.getMovies({ year: this.filter_year || undefined });
+      this.movies = await this.api.getMovies({ year: this.filter_year || undefined });
     },
 
     saveWatchlist() {
@@ -47,13 +37,12 @@ window.movieListComponent = function () {
     },
     toggleWatchlist(movie) {
       if (!movie || !movie.id) return;
-      if (this.watchlistIds.has(movie.id)) this.watchlistIds.delete(movie.id);
-      else this.watchlistIds.add(movie.id);
-      this.saveWatchlist();
-    },
+      const ids = new Set(this.watchlistIds);
+      if (ids.has(movie.id)) ids.delete(movie.id);
+      else ids.add(movie.id);
 
-    isInWatchlist(movie) {
-      return !!movie && this.watchlistIds.has(movie.id);
+      this.watchlistIds = ids;
+      this.saveWatchlist();
     },
     get watchlistCount() {
       return this.watchlistIds.size;
@@ -63,17 +52,13 @@ window.movieListComponent = function () {
       const query = (this.searchText || '').trim();
       const year = this.filter_year || undefined;
 
-      const MovieHelperClass = await loadMovieHelper();
-      const api = new MovieHelperClass();
-
       this.error = null;
       try {
         if (query) {
-          this.movies = await api.searchMovies(query, { year });
+          this.movies = await this.api.searchMovies(query, { year });
           this.appliedQuery = query.toLowerCase(); // optional: keep for UI display
         } else {
-          // Empty search → fall back to discover list
-          this.movies = await api.getMovies({ year });
+          this.movies = await this.api.getMovies({ year });
           this.appliedQuery = '';
         }
       } catch (e) {
@@ -98,26 +83,28 @@ window.movieListComponent = function () {
   };
 };
 
-let movieComponent = {
-  movie: null,
-  cast: [],
-  error: null,
-  init() {
-    const movie_id = getUrlParam('movie_id');
-    console.log('movie_id param:', movie_id);
-    if (movie_id) this.loadMovie(movie_id);
-  },
-  async loadMovie(movie_id) {
-    try {
-      const MovieHelperClass = await loadMovieHelper();
-      const api = new MovieHelperClass();
-      const data = await api.getMovieDetails(movie_id);
-      this.movie = data;
-      this.cast = (data.credits && Array.isArray(data.credits.cast)) ? data.credits.cast : [];
-    } catch (e) {
-      this.error = e.message || 'Failed to load movie.';
-    }
-  }
-};
+document.addEventListener('alpine:init', () => {
+  Alpine.data('movieComponent', () => ({
+    movie: null,
+    cast: [],
+    error: null,
 
-window.movieComponent = movieComponent;
+    init() {
+      const movie_id = getUrlParam('movie_id');
+      console.log('movie_id param:', movie_id); // debug: should log e.g. "1311031"
+      if (movie_id) this.loadMovie(movie_id);
+    },
+    async loadMovie(movie_id) {
+      try {
+        this.api ??= new MovieHelper();
+        const api = this.api;
+        const data = await api.getMovieDetails(movie_id);
+        this.movie = data;
+        this.cast = Array.isArray(data?.credits?.cast) ? data.credits.cast : [];
+      } catch (e) {
+        console.error(e);
+        this.error = e.message || 'Failed to load movie.';
+      }
+    }
+  }));
+});

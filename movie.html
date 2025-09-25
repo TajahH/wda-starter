@@ -2,35 +2,37 @@
 <html>
 
 <head>
-    <title>Showing Movie Data from an API</title>
-    <link rel="stylesheet" href="./css/style.css" />
-    <script defer src="./js/scripts.js"></script>
-    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <title>Showing Movie Data from an API</title>
+  <link rel="stylesheet" href="./css/style.css" />
+  <script type="module" src="./js/scripts.js"></script>
+  <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 
 <body>
   <div x-data="movieComponent" x-init="init()">
+
     <h1 x-text="movie ? movie.title : 'Loading…'"></h1>
+    <div class="page-section">
+      <div class="movie-page-container">
+        <p x-text="movie ? (movie.overview || '') : ''"></p>
 
-    <p x-text="movie ? (movie.overview || '') : ''"></p>
+        <p>Year: <span x-text="movie ? (movie.release_date || '').slice(0,4) : ''"></span></p>
 
-    <p>Year: <span x-text="movie ? (movie.release_date || '').slice(0,4) : ''"></span></p>
+        <p>Genre: <span x-text="movie ? (movie.genres || []).map(g => g.name).join(', ') : ''"></span></p>
 
-    <p>Genre: <span x-text="movie ? (movie.genres || []).map(g => g.name).join(', ') : ''"></span></p>
+        <p>Duration: <span x-text="movie && movie.runtime ? (movie.runtime + ' min') : '—'"></span></p>
 
-    <p>Duration: <span x-text="movie && movie.runtime ? (movie.runtime + ' min') : '—'"></span></p>
-
-    <h2>Cast</h2>
-    <ul>
-      <template x-for="p in (cast || []).slice(0,10)" :key="p.id">
-        <li>
-          <span x-text="p.name"></span>
-          <span x-text="p.character ? (' as ' + p.character) : ''"></span>
-        </li>
-      </template>
-    </ul>
-
-    <p style="color:red" x-show="error" x-text="error"></p>
+        <h2>Cast</h2>
+        <ul>
+          <template x-for="p in (cast || []).slice(0,10)" :key="p.id">
+            <li>
+              <span x-text="p.name"></span>
+              <span x-text="p.character ? (' as ' + p.character) : ''"></span>
+            </li>
+          </template>
+        </ul>
+      </div>
+    </div>
   </div>
 </body>
 
