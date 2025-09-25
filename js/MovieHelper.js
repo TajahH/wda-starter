@@ -54,6 +54,13 @@ export default class MovieHelper {
         return Array.isArray(data.results) ? data.results : [];
     }
 
+    async getWatchList(id){
+        const storedWatchlist = localStorage.getItem("id");
+        if (storedWatchlist) {
+            const watchlistData = JSON.parse(storedWatchlist);
+        } else {
+            console.log('No stored data.')
+        }
+    }
 
 }
-
