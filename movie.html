@@ -11,10 +11,13 @@
 <body>
   <div x-data="movieComponent" x-init="init()">
 
-    <h1 x-text="movie ? movie.title : 'Loading…'"></h1>
+    <div class="title-container">
+    <h1>Movie Project</h1>
+    </div>
     <div class="page-section">
       <div class="movie-page-container">
         <p><a href="index.html">Return to movie list</a></p>
+        <h2 class='movie-title' x-text="movie ? movie.title : 'Loading…'"></h2>
         <p x-text="movie ? (movie.overview || '') : ''"></p>
 
         <p>Year: <span x-text="movie ? (movie.release_date || '').slice(0,4) : ''"></span></p>

@@ -17,15 +17,26 @@ window.movieListComponent = function () {
   return {
     movies: [],
     filter_year: '',
+    years: [],
+    genres: [],
+    genreMap: {},
+    filter_genre: '',
     searchText: '',
     appliedQuery: '',
     error: null,
     watchlistIds: new Set(),
 
-    init() {
+    async init() {
       this.api = new MovieHelper();
       this.loadMovies()
-      // load saved ids
+      const start = new Date().getFullYear();
+      const end = 1980;
+      this.years = Array.from({ length: start - end + 1 }, (_, i) => String(start - i));
+
+      this.genreMap = await this.api.getGenres();
+      this.genres = Object.entries(this.genreMap)
+        .map(([id, name]) => ({ id: Number(id), name }))
+        .sort((a, b) => a.name.localeCompare(b.name));
       try {
         this.watchlistIds = new Set(getWatchlistIds());
       } catch { }
@@ -50,9 +61,23 @@ window.movieListComponent = function () {
       this.watchlistIds = ids;
       this.saveWatchlist();
     },
+
     get watchlistCount() {
       return this.watchlistIds.size;
     },
+
+    get filteredMovies() {
+    const q = (this.appliedQuery || '').toLowerCase();
+    const y = (this.filter_year || '').trim();
+    const genreId = Number.isFinite(this.filter_genre) ? this.filter_genre : null;
+
+    return this.movies.filter(m => {
+      const matchesQuery = q ? (m.title || '').toLowerCase().includes(q) : true;
+      const matchesYear  = y ? (m.release_date || '').slice(0,4) === y : true;
+      const matchesGenre = genreId ? (m.genre_ids || []).includes(genreId) : true;
+      return matchesQuery && matchesYear && matchesGenre;
+    });
+  },
 
 
     async doSearch() {
@@ -73,20 +98,13 @@ window.movieListComponent = function () {
       }
     },
 
-    clearSearch() {
+    async clearSearch() {
       this.searchText = '';
       this.appliedQuery = '';
+      this.filter_year = '';
+      this.error = null;
+      this.movies = await this.api.getMovies();
     },
-
-    get filteredMovies() {
-      const q = this.appliedQuery;
-      const y = (this.filter_year || '').trim();
-      return this.movies.filter(m => {
-        const matchesQuery = q ? (m.title || '').toLowerCase().includes(q) : true;
-        const matchesYear = y ? (m.release_date || '').slice(0, 4) === y : true;
-        return matchesQuery && matchesYear;
-      });
-    }
   };
 };
 
@@ -122,9 +140,9 @@ window.watchlistComponent = function () {
       if (!id) return;
       const next = new Set(this.watchlistIds);
       if (next.delete(id)) {
-        this.watchlistIds = next;                      
-        this.movies = this.movies.filter(m => m.id !== id);  
-        this.saveWatchlist();                          
+        this.watchlistIds = next;
+        this.movies = this.movies.filter(m => m.id !== id);
+        this.saveWatchlist();
       }
     }
   };

@@ -62,4 +62,16 @@ Release year - buggy
         return Array.isArray(data.results) ? data.results : [];
     }
 
+    async getGenres() {
+        if (this._genreMap) return this._genreMap;
+        const url = new URL(`${this.api_root}/genre/movie/list`);
+        url.searchParams.set('api_key', this.api_key);
+        url.searchParams.set('language', 'en-GB');
+        const res = await fetch(url.toString());
+        if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+        const data = await res.json(); // { genres: [{id, name}] }
+        this._genreMap = Object.fromEntries((data.genres || []).map(g => [g.id, g.name]));
+        return this._genreMap;
+    }
+
 }
