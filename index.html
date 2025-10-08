@@ -39,10 +39,11 @@
           <a :href="`watchlist.html`">Watchlist: <span x-text="watchlistCount"></span></a>
         </div>
       </form>
+      <h2>Click on the movie posters to read the synopsis!</h2>
       <ul>
         <template x-for="movie in filteredMovies" :key="movie.id">
           <li class="card-container">
-            <a class="movie-title" :href="`movie.html?movie_id=${movie.id}`" x-text="movie.title"></a>
+            <a class="movie-title" x-text="movie.title"></a>
             <p>Year: <span x-text="movie ? (movie.release_date || '').slice(0,4) : ''"></span></p>
             <a class="movie-poster-link" :href="`movie.html?movie_id=${movie.id}`"
               aria-label="View details for this movie">

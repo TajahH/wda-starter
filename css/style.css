@@ -21,8 +21,8 @@ body {
 }
 
 .title-container {
-    background-color: antiquewhite;
-    border: 1px solid green
+    background-color: #ffe66d;
+    border: 1px solid #852222
 }
 
 .page-section {
@@ -33,6 +33,11 @@ body {
 }
 
 h1 {
+    color: blue;
+    text-align: center;
+}
+
+h2 {
     color: blue;
     text-align: center;
 }
@@ -57,31 +62,31 @@ button {
 }
 
 .watchlist-page-container {
-    background-color: blanchedalmond;
+    background-color: #ffe66d;
     padding: 10px;
     display: flex;
     flex-direction: column;
-    border: 2px solid darkblue;
+    border: 2px solid #852222;
     border-radius: 8px;
     width: 70em;
 }
 
 .movie-page-container {
-    background-color: blanchedalmond;
+    background-color: #ffe66d;
     padding: 10px;
     display: flex;
     flex-direction: column;
-    border: 2px solid darkblue;
+    border: 2px solid #852222;
     border-radius: 8px;
     width: 30em
 }
 
 .movie-container {
-    background-color: blanchedalmond;
+    background-color: #ffe66d;
     padding: 10px;
     display: flex;
     flex-direction: column;
-    border: 2px solid darkblue;
+    border: 2px solid #852222;
     border-radius: 8px;
     width: 70em;
     min-width: 30em;
@@ -139,7 +144,7 @@ li {
     padding: 10px;
     display: flex;
     flex-direction: column;
-    border: 2px solid darkblue;
+    border: 2px solid #852222;
     border-radius: 8px;
     width: 70em;
 }
