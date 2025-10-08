@@ -13,14 +13,14 @@
   <div class="page-section">
     <h1>Movie Project</h1>
     <div class="movie-container" x-cloak x-data="movieListComponent()" x-init="init()">
-      <select x-model="filter_year">
-        <option aria-label="select years to filter" value="">All Years</option>
+      <select class="year-filter" aria-label="select years to filter" x-model="filter_year">
+        <option  value="">All Years</option>
         <template x-for="y in years" :key="y">
           <option :value="y" x-text="y"></option>
         </template>
       </select>
-      <select x-model.number="filter_genre">
-          <option aria-label="select genres to filter" value="">All Genres</option>
+      <select class="genre-filter" aria-label="select genres to filter" x-model.number="filter_genre">
+          <option value="">All Genres</option>
           <template x-for="g in genres" :key="g.id">
             <option :value="g.id" x-text="g.name"></option>
           </template>
