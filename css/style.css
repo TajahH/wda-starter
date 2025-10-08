@@ -117,9 +117,9 @@ li {
 }
 
 .watchlist-btn {
-    background-color: #c2fbd7;
+    background-color: #002db9;
     border-radius: 100px;
-    color: green;
+    color: #ffe66d;
     cursor: pointer;
     display: inline-block;
     font-family: CerebriSans-Regular, -apple-system, system-ui, Roboto, sans-serif;
