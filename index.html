@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
   <title>Showing Movie Data from an API</title>
@@ -9,17 +9,18 @@
 </head>
 
 <body>
+  <main>
   <div class="page-section">
     <h1>Movie Project</h1>
     <div class="movie-container" x-cloak x-data="movieListComponent()" x-init="init()">
       <select x-model="filter_year">
-        <option value="">All Years</option>
+        <option aria-label="select years to filter" value="">All Years</option>
         <template x-for="y in years" :key="y">
           <option :value="y" x-text="y"></option>
         </template>
       </select>
       <select x-model.number="filter_genre">
-          <option value="">All Genres</option>
+          <option aria-label="select genres to filter" value="">All Genres</option>
           <template x-for="g in genres" :key="g.id">
             <option :value="g.id" x-text="g.name"></option>
           </template>
@@ -56,6 +57,9 @@
       </ul>
     </div>
   </div>
+  </main>
+  <footer>Created by Tajah Hamilton</footer>
 </body>
+
 
 </html>
