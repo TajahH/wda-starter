@@ -67,6 +67,14 @@ window.movieListComponent = function () {
       this.loadMovies();
     },
 
+    clearRuntime() {
+      this.runtimeMin = null;
+      this.runtimeMax = null;
+
+      this.error = null;
+      this.loadMovies();
+    },
+
     saveWatchlist() {
       localStorage.setItem('watchlist_ids', JSON.stringify([...this.watchlistIds]));
     },

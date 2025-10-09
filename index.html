@@ -46,7 +46,7 @@
           <input type="number" inputmode="numeric" min="0" step="1" placeholder="min runtime"  x-model.number="runtimeMin" aria-label="Filter by Runtime minimum (mins)">
           <input type="number" inputmode="numeric" min="0" step="1" placeholder="max runtime"  x-model.number="runtimeMax" aria-label="Filter by Runtime maximum (mins)">
           <button type="submit">Submit</button>
-          <button type="button" @click="runtimeMin=null; runtimeMax=null; loadMovies();">Clear</button>
+          <button type="button" @click="clearRuntime();">Clear</button>
         </form>
         <h2>Click on the movie posters to read the synopsis!</h2>
         <ul>
