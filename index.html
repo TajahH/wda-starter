@@ -27,12 +27,12 @@
             <option :value="g.id" x-text="g.name"></option>
           </template>
         </select>
-        <div x-show="filter_year !== ''">
-          Showing movies from <span x-text="filter_year"></span>
-        </div>
-        <div x-show="filter_genre">
-          Genre: <span x-text="genres.find(gg => gg.id == filter_genre)?.name || ''"></span>
-        </div>
+          <div x-show="filter_year !== ''">
+            Showing movies from <span x-text="filter_year"></span>
+          </div>
+          <div x-show="filter_genre">
+            Genre: <span x-text="genres.find(gg => gg.id == filter_genre)?.name || ''"></span>
+          </div>
         <form @submit.prevent="doSearch()" style="margin: 0 0 1rem 0;">
           <input type="search" placeholder="Search movies..." x-model="searchText"
             aria-label="Search movies by keyword">
@@ -43,8 +43,10 @@
           </div>
         </form>
         <form @submit.prevent="applyRuntimeFilter()">
-          <input type="number" inputmode="numeric" min="0" step="1" placeholder="min runtime"  x-model.number="runtimeMin" aria-label="Filter by Runtime minimum (mins)">
-          <input type="number" inputmode="numeric" min="0" step="1" placeholder="max runtime"  x-model.number="runtimeMax" aria-label="Filter by Runtime maximum (mins)">
+          <input type="number" inputmode="numeric" min="0" step="1" placeholder="min runtime"
+            x-model.number="runtimeMin" aria-label="Filter by Runtime minimum (mins)">
+          <input type="number" inputmode="numeric" min="0" step="1" placeholder="max runtime"
+            x-model.number="runtimeMax" aria-label="Filter by Runtime maximum (mins)">
           <button type="submit">Submit</button>
           <button type="button" @click="clearRuntime();">Clear</button>
         </form>

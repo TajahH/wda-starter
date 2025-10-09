@@ -70,7 +70,6 @@ window.movieListComponent = function () {
     clearRuntime() {
       this.runtimeMin = null;
       this.runtimeMax = null;
-
       this.error = null;
       this.loadMovies();
     },
