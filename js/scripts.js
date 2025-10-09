@@ -21,6 +21,8 @@ window.movieListComponent = function () {
     genres: [],
     genreMap: {},
     filter_genre: '',
+    runtimeMin: null,
+    runtimeMax: null,
     searchText: '',
     appliedQuery: '',
     error: null,
@@ -28,7 +30,7 @@ window.movieListComponent = function () {
 
     async init() {
       this.api = new MovieHelper();
-      this.loadMovies()
+      await this.loadMovies()
       const start = new Date().getFullYear();
       const end = 1980;
       this.years = Array.from({ length: start - end + 1 }, (_, i) => String(start - i));
@@ -43,7 +45,26 @@ window.movieListComponent = function () {
     },
 
     async loadMovies() {
-      this.movies = await this.api.getMovies({ year: this.filter_year || undefined });
+      const year = this.filter_year || undefined;
+      const runtimeMin = Number.isFinite(this.runtimeMin) ? this.runtimeMin : undefined;
+      const runtimeMax = Number.isFinite(this.runtimeMax) ? this.runtimeMax : undefined;
+      let base = await this.api.getMovies({ year, runtimeMin, runtimeMax });
+
+      if (Number.isFinite(this.runtimeMin) || Number.isFinite(this.runtimeMax)) {
+        const details = await Promise.all(base.map(m => this.api.getMovieDetails(m.id)));
+        base = details.filter(d => {
+          const rt = Number(d.runtime) || 0;
+          const minOk = Number.isFinite(this.runtimeMin) ? rt >= this.runtimeMin : true;
+          const maxOk = Number.isFinite(this.runtimeMax) ? rt <= this.runtimeMax : true;
+          return minOk && maxOk;
+        });
+      }
+
+      this.movies = base;
+    },
+
+    applyRuntimeFilter() {
+      this.loadMovies();
     },
 
     saveWatchlist() {
@@ -67,17 +88,17 @@ window.movieListComponent = function () {
     },
 
     get filteredMovies() {
-    const q = (this.appliedQuery || '').toLowerCase();
-    const y = (this.filter_year || '').trim();
-    const genreId = Number.isFinite(this.filter_genre) ? this.filter_genre : null;
+      const q = (this.appliedQuery || '').toLowerCase();
+      const y = (this.filter_year || '').trim();
+      const genreId = Number.isFinite(this.filter_genre) ? this.filter_genre : null;
 
-    return this.movies.filter(m => {
-      const matchesQuery = q ? (m.title || '').toLowerCase().includes(q) : true;
-      const matchesYear  = y ? (m.release_date || '').slice(0,4) === y : true;
-      const matchesGenre = genreId ? (m.genre_ids || []).includes(genreId) : true;
-      return matchesQuery && matchesYear && matchesGenre;
-    });
-  },
+      return this.movies.filter(m => {
+        const matchesQuery = q ? (m.title || '').toLowerCase().includes(q) : true;
+        const matchesYear = y ? (m.release_date || '').slice(0, 4) === y : true;
+        const matchesGenre = genreId ? (m.genre_ids || []).includes(genreId) : true;
+        return matchesQuery && matchesYear && matchesGenre;
+      });
+    },
 
 
     async doSearch() {

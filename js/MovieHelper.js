@@ -1,19 +1,22 @@
 export default class MovieHelper {
 
     constructor() {
-        // Define our API root URL, we can then add specific paths onto the end for different queries
         this.api_root = "https://api.themoviedb.org/3"
-        // Define our API key here
         this.api_key = "ed48f7dc083b0fe8b91c340f05e330a4"
     }
 
     // Use the API endpoint documented on this page: https://developer.themoviedb.org/reference/discover-movie
-    async getMovies({ year } = {}) {
+    async getMovies({ year, runtimeMin, runtimeMax } = {}) {
         const url = new URL(`${this.api_root}/discover/movie`);
         url.searchParams.set('api_key', this.api_key);
         url.searchParams.set('include_adult', 'false');
         url.searchParams.set('language', 'en-GB');
+        url.searchParams.set('sort_by', 'popularity.desc');
         if (year) url.searchParams.set('primary_release_year', String(year));
+        if (Number.isFinite(runtimeMin)) url.searchParams.set('with_runtime.gte', String(runtimeMin));
+        if (Number.isFinite(runtimeMax)) url.searchParams.set('with_runtime.lte', String(runtimeMax));
+
+        console.log('[discover]', url.toString());
         try {
             const response = await fetch(url.toString());
             if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
@@ -24,12 +27,6 @@ export default class MovieHelper {
             return []
         }
     }
-
-    /* TODO Filter results using the following attributes
-Runtime / duration
-Genre
-Release year - buggy
-*/
 
     async getMovieDetails(id) {
         const url = new URL(`${this.api_root}/movie/${id}`);
