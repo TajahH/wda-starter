@@ -27,12 +27,12 @@
             <option :value="g.id" x-text="g.name"></option>
           </template>
         </select>
-          <div x-show="filter_year !== ''">
-            Showing movies from <span x-text="filter_year"></span>
-          </div>
-          <div x-show="filter_genre">
-            Genre: <span x-text="genres.find(gg => gg.id == filter_genre)?.name || ''"></span>
-          </div>
+        <div x-show="filter_year !== ''">
+          Showing movies from <span x-text="filter_year"></span>
+        </div>
+        <div x-show="filter_genre">
+          Genre: <span x-text="genres.find(gg => gg.id == filter_genre)?.name || ''"></span>
+        </div>
         <form @submit.prevent="doSearch()" style="margin: 0 0 1rem 0;">
           <input type="search" placeholder="Search movies..." x-model="searchText"
             aria-label="Search movies by keyword">
@@ -51,11 +51,16 @@
           <button type="button" @click="clearRuntime();">Clear</button>
         </form>
         <h2>Click on the movie posters to read the synopsis!</h2>
+        <select class="popularity-sort" aria-label="Sort movies by popularity" x-model="popularitySort">
+          <option value="ascending">Popularity: Low-High</option>
+          <option value="descending">Popularity: High-Low</option>
+        </select>
         <ul>
-          <template x-for="movie in filteredMovies" :key="movie.id">
+          <template x-for="movie in sortedMovies" :key="movie.id">
             <li class="card-container">
               <a class="movie-title" x-text="movie.title"></a>
               <p>Year: <span x-text="movie ? (movie.release_date || '').slice(0,4) : ''"></span></p>
+              <p>Popularity: <span x-text="Number(movie.popularity ?? 0).toFixed(1)"></span></p>
               <a class="movie-poster-link" :href="`movie.html?movie_id=${movie.id}`"
                 aria-label="View details for this movie">
                 <img :src="movie?.poster_path ? `https://image.tmdb.org/t/p/w342${movie.poster_path}` : ''"

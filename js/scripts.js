@@ -21,6 +21,7 @@ window.movieListComponent = function () {
     genres: [],
     genreMap: {},
     filter_genre: '',
+    popularitySort: 'descending',
     runtimeMin: null,
     runtimeMax: null,
     searchText: '',
@@ -94,6 +95,16 @@ window.movieListComponent = function () {
       return this.watchlistIds.size;
     },
 
+    get sortedMovies() {
+      const base = this.filteredMovies ?? this.movies;
+      const list = [...base];
+      list.sort((a, b) => {
+        const diff = (a.popularity || 0) - (b.popularity || 0);
+        return this.popularitySort === 'ascending' ? diff : -diff;
+      });
+      return list;
+    },
+
     get filteredMovies() {
       const q = (this.appliedQuery || '').toLowerCase();
       const y = (this.filter_year || '').trim();
@@ -116,7 +127,7 @@ window.movieListComponent = function () {
       try {
         if (query) {
           this.movies = await this.api.searchMovies(query, { year });
-          this.appliedQuery = query.toLowerCase(); // optional: keep for UI display
+          this.appliedQuery = query.toLowerCase();
         } else {
           this.movies = await this.api.getMovies({ year });
           this.appliedQuery = '';
@@ -184,7 +195,6 @@ document.addEventListener('alpine:init', () => {
 
     init() {
       const movie_id = getUrlParam('movie_id');
-      console.log('movie_id param:', movie_id); // debug: should log e.g. "1311031"
       if (movie_id) this.loadMovie(movie_id);
     },
     async loadMovie(movie_id) {

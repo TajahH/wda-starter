@@ -11,12 +11,9 @@ export default class MovieHelper {
         url.searchParams.set('api_key', this.api_key);
         url.searchParams.set('include_adult', 'false');
         url.searchParams.set('language', 'en-GB');
-        url.searchParams.set('sort_by', 'popularity.desc');
         if (year) url.searchParams.set('primary_release_year', String(year));
         if (Number.isFinite(runtimeMin)) url.searchParams.set('with_runtime.gte', String(runtimeMin));
         if (Number.isFinite(runtimeMax)) url.searchParams.set('with_runtime.lte', String(runtimeMax));
-
-        console.log('[discover]', url.toString());
         try {
             const response = await fetch(url.toString());
             if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
