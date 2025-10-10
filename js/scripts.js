@@ -1,4 +1,5 @@
 import MovieHelper from './MovieHelper.js';
+import DTDDHelper from './DTDDHelper.js';
 
 function getWatchlistIds() {
   try {
@@ -192,6 +193,11 @@ document.addEventListener('alpine:init', () => {
     movie: null,
     cast: [],
     error: null,
+    dtdd: null,
+    triggersItems: null,
+    triggersBest: null,
+    triggersLoading: false,
+    triggersError: null,
 
     init() {
       const movie_id = getUrlParam('movie_id');
@@ -207,6 +213,38 @@ document.addEventListener('alpine:init', () => {
       } catch (e) {
         console.error(e);
         this.error = e.message || 'Failed to load movie.';
+      }
+    },
+
+    async fetchTriggerWarnings() {
+      if (!this.movie) return;
+      this.triggersLoading = true;
+      this.triggersError = null;
+
+      try {
+        // lazy import + init
+        if (this.dtdd == null) {
+          this.dtdd = new DTDDHelper();
+        }
+
+        const tmdbId = this.movie.id;
+        const title = this.movie.title || '';
+        const altTitle = this.movie.original_title || '';
+        const year = (this.movie.release_date || '').slice(0, 4);
+
+        const { match, items } = await this.dtdd.getItemByTmdbId({
+          tmdbId, title, altTitle, year
+        });
+
+        this.triggersItems = items || [];
+        this.triggersBest = match || null;
+      } catch (e) {
+        console.warn('DTDD fetch failed:', e);
+        this.triggersError = e.message || 'Could not load content warnings.';
+        this.triggersItems = null;
+        this.triggersBest = null;
+      } finally {
+        this.triggersLoading = false;
       }
     }
   }));

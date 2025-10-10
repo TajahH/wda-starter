@@ -12,7 +12,7 @@
   <div x-data="movieComponent" x-init="init()">
 
     <div class="title-container">
-    <h1>Movie Project</h1>
+      <h1>Movie Project</h1>
     </div>
     <div class="page-section">
       <div class="movie-page-container">
@@ -25,6 +25,17 @@
         <p>Genre: <span x-text="movie ? (movie.genres || []).map(g => g.name).join(', ') : ''"></span></p>
 
         <p>Duration: <span x-text="movie && movie.runtime ? (movie.runtime + ' min') : '—'"></span></p>
+        <button type="button" @click="fetchTriggerWarnings()" :disabled="triggersLoading">
+          <span x-show="!triggersLoading">Show content warnings</span>
+          <span x-show="triggersLoading">Loading…</span>
+        </button>
+
+        <p x-show="triggersError" x-text="triggersError"></p>
+
+        <section x-show="triggersBest && !triggersError">
+          <h3 x-text="`${triggersBest.name} (${triggersBest.releaseYear || ''})`"></h3>
+          <p x-text="triggersBest.overview || 'No summary available.'"></p>
+        </section>
 
         <h2>Cast</h2>
         <ul>
