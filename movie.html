@@ -41,8 +41,8 @@
         <ul>
           <template x-for="p in (cast || []).slice(0,10)" :key="p.id">
             <li>
-              <span x-text="p.name"></span>
-              <span x-text="p.character ? (' as ' + p.character) : ''"></span>
+              <span class="cast-list" x-text="p.name"></span>
+              <span class="cast-list" x-text="p.character ? (' as ' + p.character) : ''"></span>
             </li>
           </template>
         </ul>
