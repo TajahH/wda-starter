@@ -55,7 +55,7 @@
           <option value="ascending">Popularity: Low-High</option>
           <option value="descending">Popularity: High-Low</option>
         </select>
-        <ul>
+        <ul "cards">
           <template x-for="movie in sortedMovies" :key="movie.id">
             <li class="card-container">
               <a class="movie-title" x-text="movie.title"></a>

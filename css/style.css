@@ -4,9 +4,11 @@ html {
 }
 
 img {
+    padding: 20px;
     max-width: 100%;
     height: auto;
     display: block;
+    height: auto;
 }
 
 body {
@@ -26,10 +28,12 @@ body {
 }
 
 .page-section {
+    width: 100%;
+    margin: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 12px;
+    padding: 0;
 }
 
 h1 {
@@ -45,15 +49,6 @@ h1 {
 h2 {
     color: blue;
     text-align: center;
-}
-
-img {
-    padding: 20px;
-    width: 300px;
-    max-width: 100%;
-    height: auto;
-    display: block;
-
 }
 
 button {
@@ -160,6 +155,25 @@ li {
     width: 70em;
 }
 
-@media screen {
-    
+
+@media (min-width: 40em) {
+  .movie-container,
+  .watchlist-page-container,
+  .movie-page-container {
+    max-width: 48em;
+    margin-inline: auto;
+  }
+
+  .cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 64em) {
+  .movie-container,
+  .watchlist-page-container,
+  .movie-page-container {
+    max-width: 70em;
+  }
+
 }
