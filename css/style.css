@@ -94,7 +94,7 @@ ul {
 }
 
 .card-container {
-    border: 1px solid grey;
+    border: 2px solid #852222;
     border-radius: 8px;
     margin: 8px;
     display: flex;

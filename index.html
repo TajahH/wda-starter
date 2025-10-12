@@ -42,6 +42,9 @@
           <div>
             <a :href="`watchlist.html`">Watchlist: <span x-text="watchlistCount"></span></a>
           </div>
+          <div>
+            <p>Click me for a random film!</p>
+          </div>
         </form>
         <form @submit.prevent="applyRuntimeFilter()">
           <input type="number" inputmode="numeric" min="0" step="1" placeholder="min runtime"
